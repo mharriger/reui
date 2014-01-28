@@ -6,7 +6,7 @@ Dependencies: gaugette, PyDispatcher
 (c) 2014 Matt Harriger
 '''
 
-import pydispatch
+from pydispatch import dispatcher
 
 import gaugette.rotary_encoder
 import gaugette.switch
@@ -22,6 +22,7 @@ SW_PIN = 8
 
 #Configuration constants
 LONG_CLICK_LEN = 1.5 #Length of a long click, in seconds. Can be a float.
+POS_STEP_DIVISOR = 4 #Number of encoder steps betwwen LEFT and RIGHT events.
 
 
 #Signals for PyDispatcher
@@ -52,6 +53,11 @@ class App:
         self.switch = gaugette.switch.Switch(SW_PIN)
         self.last_switch_state = self.switch.get_state()
 
+        self.accumPosChange = 0
+
+        dispatcher.connect(self.on_pos_change, signal=SGL_POS_CHANGE,
+                             sender=self.encoder)
+
         return
 
     '''
@@ -62,7 +68,19 @@ class App:
         while True:
             delta = self.encoder.get_delta()
             if delta != 0:
-                pydispatch.dispatcher.send(signal=SGL_POS_CHANGE, sender=self, delta=delta)
+                dispatcher.send(signal=SGL_POS_CHANGE,
+                                           sender=self.encoder, delta=delta)
             state = self.switch.get_state()
             if state != self.last_switch_state:
-                pydispatch.dispatcher.send(signal=SGL_SWITCH_CHANGE, sender=self, state=state)
+                dispatcher.send(signal=SGL_SWITCH_CHANGE,
+                                           sender=self.encoder, state=state)
+
+    def on_pos_change(self, **args):
+        if 'delta' in args:
+            self.accumPosChange += args['delta']
+        if self.accumPosChange % 4 == 0:
+            if self.accumPosChange < 0:
+                dispatcher.send(signal=SGL_LEFT, sender=self.encoder)
+            if self.accumPosChange > 0:
+                dispatcher.send(signal=SGL_RIGHT, sender=self.encoder)
+            self.accumPosChange = 0
