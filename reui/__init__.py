@@ -39,6 +39,13 @@ SGL_DOWN_LEFT = 'down_left' #Encoder turned one step to left while switch held d
 SGL_DOWN_RIGHT = 'down_right' #Encoder turned one step to right while switch held down
 SGL_LONG_CLICK = 'long_click' #Button held down for more than LONG_CLICK_LEN seconds
 
+#Border flags
+BORDER_TOP = 1
+BORDER_BOTTOM = 2
+BORDER_LEFT = 4
+BORDER_RIGHT = 8
+BORDER_ALL = 15
+
 '''
 An reui application. Implements the main event loop.
 '''
