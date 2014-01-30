@@ -21,18 +21,18 @@ class Box:
         self.display.draw_text(x + self.x, y + self.y, string)
         
     def draw_border(self):
-        if self.border_flags | reui.BORDER_TOP:
-            for x in range(self.x, self.x + self.width):
+        if self.border_flags & reui.BORDER_TOP:
+            for x in range(self.x, self.x + self.width - 1):
                 self.display.draw_pixel(x, self.y)
-        if self.border_flags | reui.BORDER_BOTTOM:
-            for x in range(self.x, self.x + self.width):
-                self.display.draw_pixel(x, self.y + self.height)
-        if self.border_flags | reui.BORDER_LEFT:
-            for y in range(self.y, self.y + self.height):
+        if self.border_flags & reui.BORDER_BOTTOM:
+            for x in range(self.x - 1, self.x + self.width - 1):
+                self.display.draw_pixel(x, self.y + self.height - 1)
+        if self.border_flags & reui.BORDER_LEFT:
+            for y in range(self.y, self.y + self.height - 1):
                 self.display.draw_pixel(self.x, y)
-        if self.border_flags | reui.BORDER_RIGHT:
-            for y in range(self.y, self.y + self.height):
-                self.display.draw_pixel(self.x + self.width, y)
+        if self.border_flags & reui.BORDER_RIGHT:
+            for y in range(self.y, self.y + self.height - 1):
+                self.display.draw_pixel(self.x + self.width - 1, y)
     
     def refresh(self):
         self.display.display()
