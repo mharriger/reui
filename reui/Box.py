@@ -1,4 +1,5 @@
 import reui
+from pydispatch import dispatcher
 
 '''
 A box is a region of a display that can be drawn to. Boxes can optionally have borders.
@@ -35,4 +36,4 @@ class Box:
                 self.display.draw_pixel(self.x + self.width - 1, y)
     
     def refresh(self):
-        self.display.display()
+        dispatcher.send(signal=SGL_BOX_UPDATE, sender=self)
