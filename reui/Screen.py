@@ -12,8 +12,10 @@ class Screen:
     _boxMap = {}
     _bitmap = None
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, display):
         self._bitmap = Bitmap(width, height, 'y')
+        self._display = display
+        self._display.bitmap = self._bitmap
 
     def addBox(self, x, y, box):
         self._boxes.append((x, y, box))
@@ -31,4 +33,5 @@ class Screen:
             if sender in self._boxMap:
                 (x, y) = self._boxMa[sender]
                 self._bitmap.replace_rect(x, y, sender._bitmap)
+        self._display.display()
 
