@@ -17,7 +17,7 @@ class Screen:
         self._display = display
         self._display.bitmap = self._bitmap
 
-    def addBox(self, x, y, box):
+    def add_box(self, x, y, box):
         self._boxes.append((x, y, box))
         self._boxM[box] = (x, y)
         dispatcher.connect(self.on_box_update, signal=reui.SGL_BOX_UPDATE,
