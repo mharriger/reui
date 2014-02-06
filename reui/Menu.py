@@ -19,3 +19,4 @@ class Menu(Box.Box):
         for item in self.items:
             self.draw_text(2, pos, item[0])
             pos += 9
+        self.refresh()
