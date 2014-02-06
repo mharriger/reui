@@ -1,6 +1,7 @@
 import reui
 from gaugette.bitmap import Bitmap
 from gaugette.font5x8 import Font5x8
+from pydispatch import dispatcher
 
 '''
 A box is a region of a display that can be drawn to. Boxes can optionally have borders.
@@ -32,7 +33,7 @@ class Box:
                 self._bitmap.draw_pixel(self.width - 1, y)
     
     def refresh(self):
-        self.display.display()
+        dispatcher.send(signal=reui.SGL_BOX_UPDATE, sender=self)
 
     def draw_text(self, x, y, string):
         font_bytes = self.font.bytes
