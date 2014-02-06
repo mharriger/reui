@@ -1,4 +1,6 @@
 import reui
+from gaugette.bitmap import Bitmap
+from gaugette.font5x8 import Font5x8
 
 '''
 A box is a region of a display that can be drawn to. Boxes can optionally have borders.
@@ -8,31 +10,41 @@ class Box:
     width = width of box
     height = height of box
     '''
-    def __init__(self, display, width, height, border_flags=0, x=0, y=0):
-        self.display = display
+    def __init__(self, width, height, border_flags=0):
+        self._bitmap = Bitmap(width, height, 'y') 
         self.width = width
         self.height = height
         self.border_flags = border_flags
-        #Temporary until I decide on how this will be implemented
-        self.x = x
-        self.y = y
-
-    def draw_text(self, x, y, string):
-        self.display.draw_text(x + self.x, y + self.y, string)
+        self.font = Font5x8
         
     def draw_border(self):
         if self.border_flags & reui.BORDER_TOP:
-            for x in range(self.x, self.x + self.width - 1):
-                self.display.draw_pixel(x, self.y)
+            for x in range(self.width - 1):
+                self._bitmap.draw_pixel(x, 0)
         if self.border_flags & reui.BORDER_BOTTOM:
-            for x in range(self.x - 1, self.x + self.width - 1):
-                self.display.draw_pixel(x, self.y + self.height - 1)
+            for x in range(self.width - 1):
+                self._bitmap.draw_pixel(x, self.height - 1)
         if self.border_flags & reui.BORDER_LEFT:
-            for y in range(self.y, self.y + self.height - 1):
-                self.display.draw_pixel(self.x, y)
+            for y in range(self.height - 1):
+                self._bitmap.draw_pixel(0, y)
         if self.border_flags & reui.BORDER_RIGHT:
-            for y in range(self.y, self.y + self.height - 1):
-                self.display.draw_pixel(self.x + self.width - 1, y)
+            for y in range(self.height - 1):
+                self._bitmap.draw_pixel(self.width - 1, y)
     
     def refresh(self):
         self.display.display()
+
+    def draw_text(self, x, y, string):
+        font_bytes = self.font.bytes
+        font_rows = self.font.rows
+        font_cols = self.font.cols
+        for c in string:
+            p = ord(c) * font_cols
+            for col in range(0,font_cols):
+                mask = font_bytes[p]
+                p+=1
+                for row in range(0,8):
+                    self._bitmap.draw_pixel(x,y+row,mask & 0x1)
+                    mask >>= 1
+                x += 1
+

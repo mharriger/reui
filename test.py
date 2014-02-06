@@ -1,5 +1,6 @@
 import reui
 import reui.Box
+import reui.Menu
 import pydispatch
 
 import gaugette.rotary_encoder
@@ -22,12 +23,19 @@ display = gaugette.ssd1306.SSD1306(dc_pin=DC_PIN, reset_pin=RESET_PIN,
 display.clear_display()
 display.begin()
 
-box = reui.Box.Box(display, 128, 10, reui.BORDER_BOTTOM, 0, 0)
+box = reui.Box.Box(128, 10, reui.BORDER_BOTTOM,)
+menu = reui.Menu.Menu(128, 50)
 
 box.draw_text(2, 1, "Hello World!")
 box.draw_border()
-box.refresh()
+menu.draw()
 
+display.bitmap.replace_rect(0,0,box._bitmap)
+display.bitmap.replace_rect(0,10,menu._bitmap)
+
+#menu.refresh()
+
+display.display()
 
 try:
     app.run()
