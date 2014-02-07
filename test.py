@@ -16,7 +16,7 @@ DC_PIN    = 16
 
 app = reui.App()
 
-def hdlr(self, **args):
+def hdlr(**args):
     print args
 
 pydispatch.dispatcher.connect(hdlr, sender=pydispatch.dispatcher.Any)
