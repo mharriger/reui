@@ -1,6 +1,6 @@
 import reui
 from gaugette.bitmap import Bitmap
-from gaugette.font5x8 import Font5x8
+from gaugette.fonts import arial_16
 from pydispatch import dispatcher
 
 '''
@@ -16,7 +16,6 @@ class Box:
         self.width = width
         self.height = height
         self.border_flags = border_flags
-        self.font = Font5x8
         
     def draw_border(self):
         if self.border_flags & reui.BORDER_TOP:
@@ -35,17 +34,6 @@ class Box:
     def refresh(self):
         dispatcher.send(signal=reui.SGL_BOX_UPDATE, sender=self)
 
-    def draw_text(self, x, y, string):
-        font_bytes = self.font.bytes
-        font_rows = self.font.rows
-        font_cols = self.font.cols
-        for c in string:
-            p = ord(c) * font_cols
-            for col in range(0,font_cols):
-                mask = font_bytes[p]
-                p+=1
-                for row in range(0,8):
-                    self._bitmap.draw_pixel(x,y+row,mask & 0x1)
-                    mask >>= 1
-                x += 1
+    def draw_text(self, x, y, string, font=arial_16):
+        self._bitmap.draw_text(x, y, string, font)
 
