@@ -8,6 +8,8 @@ import gaugette.rotary_encoder
 import gaugette.switch
 import gaugette.ssd1306
 
+from datetime import datetime
+
 # Set up the pins for gaugette.
 RESET_PIN = 15
 DC_PIN    = 16
@@ -25,12 +27,14 @@ display.clear_display()
 display.begin()
 
 screen = reui.Screen(128, 64, display)
-box = reui.Box.Box(128, 10, reui.BORDER_BOTTOM,)
-menu = reui.Menu.Menu(128, 50)
+box = reui.Box.Box(128, 18, reui.BORDER_BOTTOM)
+menu = reui.Menu.Menu(128, 46)
 screen.add_box(0, 0, box)
-screen.add_box(0, 10, menu)
+screen.add_box(0, 18, menu)
 
-box.draw_text(2, 1, "Hello World!")
+box.draw_text(0, 0, datetime.today().strftime('%H:%M'))
+date_str = datetime.today().strftime('%x')
+box.draw_text(127 - box._bitmap.text_width(date_str, reui.Box.arial_16), 0, date_str)
 box.draw_border()
 menu.draw()
 
