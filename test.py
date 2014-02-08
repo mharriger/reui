@@ -14,7 +14,7 @@ DC_PIN    = 16
 
 app = reui.App()
 
-def hdlr(self, **args):
+def hdlr(**args):
     print args
 
 pydispatch.dispatcher.connect(hdlr, sender=pydispatch.dispatcher.Any)
@@ -24,7 +24,7 @@ display = gaugette.ssd1306.SSD1306(dc_pin=DC_PIN, reset_pin=RESET_PIN,
 display.clear_display()
 display.begin()
 
-screen = reui.Screen(128, 64, display)
+screen = reui.Screen.Screen(128, 64, display)
 box = reui.Box.Box(128, 10, reui.BORDER_BOTTOM,)
 menu = reui.Menu.Menu(128, 50)
 screen.add_box(0, 0, box)
@@ -32,7 +32,10 @@ screen.add_box(0, 10, menu)
 
 box.draw_text(2, 1, "Hello World!")
 box.draw_border()
+box.refresh()
 menu.draw()
+
+screen._bitmap.dump()
 
 try:
     app.run()
