@@ -5,6 +5,7 @@ physical display device.
 
 from pydispatch import dispatcher
 from reui import SGL_BOX_UPDATE
+from gaugette import bitmap
 
 class Screen:
 
@@ -13,14 +14,15 @@ class Screen:
     _bitmap = None
 
     def __init__(self, width, height, display):
-        self._bitmap = Bitmap(width, height, 'y')
+        #self._bitmap = bitmap.Bitmap(width, height, 'y')
         self._display = display
-        self._display.bitmap = self._bitmap
+        #self._display.bitmap = self._bitmap
+        self._bitmap = self._display.bitmap
 
     def add_box(self, x, y, box):
         self._boxes.append((x, y, box))
-        self._boxM[box] = (x, y)
-        dispatcher.connect(self.on_box_update, signal=reui.SGL_BOX_UPDATE,
+        self._boxMap[box] = (x, y)
+        dispatcher.connect(self.on_box_update, signal=SGL_BOX_UPDATE,
                              sender=box)
 
     def draw(self):
@@ -31,7 +33,7 @@ class Screen:
         if 'sender' in args:
             sender = args['sender']
             if sender in self._boxMap:
-                (x, y) = self._boxMa[sender]
+                (x, y) = self._boxMap[sender]
                 self._bitmap.replace_rect(x, y, sender._bitmap)
         self._display.display()
 
