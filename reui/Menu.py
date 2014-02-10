@@ -8,6 +8,7 @@ class Menu(Box.Box):
 
     items = [("Item 1",),("Item 2",),("Item 3",)]
     _selidx = 0
+    _highlightpos = 1
 
     '''
     Initialize Menu object
@@ -31,15 +32,27 @@ class Menu(Box.Box):
                 pos += Box.arial_16.char_height
         self.refresh()
         
+    def move_highlight_to(self, x):
+        while x > self._highlightpos:
+            self._bitmap.invert_row(self._highlightpos)
+            self._highlightpos += 1
+            self.bitmap.invert_row(self._highlightpos + Box.arial_16.char_height)
+            self.refresh()
+        while x < self._highlightpos:
+            self._bitmap.invert_row(self._highlightpos + Box.arial_16.char_height)
+            self._highlightpos -= 1
+            self.bitmap.invert_row(self._highlightpos)
+            self.refresh()
+        
     def on_left(self, **args):
         if self._selidx < len(items):
             self._selidx += 1
-            self.draw()
+            self.move_highlight_to(self._selidx * Box.arial_16.char_height + 1)
             
     def on_right(self, **args):
         if self._selidx > 0:
             self._selidx -= 1
-            self.draw()
+            self.move_highlight_to(self._selidx * Box.arial_16.char_height + 1)
             
     def on_click(self, **args):
         print "Clicked on item: %s" % self.items[self._selidx][0]
