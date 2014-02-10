@@ -34,6 +34,6 @@ class Box:
     def refresh(self):
         dispatcher.send(signal=reui.SGL_BOX_UPDATE, sender=self)
 
-    def draw_text(self, x, y, string, font=arial_16):
-        self._bitmap.draw_text(x, y, string, font)
+    def draw_text(self, x, y, string, font=arial_16, inverse=False):
+        self._bitmap.draw_text(x, y, string, font, inverse)
 

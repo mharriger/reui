@@ -17,6 +17,12 @@ class Menu(Box.Box):
     def draw(self):
         pos = 1
         for item in self.items:
-            self.draw_text(2, pos, item[0])
-            pos += 9
+            if item[0] == 'Item 1':
+                self.draw_text(2, pos, item[0])
+                for i in range(Box.arial_16.char_height):
+                    self._bitmap.invert_row(2 + i)
+                pos += Box.arial_16.char_height
+            else:
+                self.draw_text(2, pos, item[0])
+                pos += Box.arial_16.char_height
         self.refresh()
