@@ -13,8 +13,8 @@ class Menu(Box.Box):
     '''
     Initialize Menu object
     '''
-    def __init__(self, width, height, border_flags = 0):
-        Box.Box.__init__(self, width, height, border_flags)
+    def __init__(self, screen, width, height, border_flags = 0):
+        Box.Box.__init__(self, screen, width, height, border_flags)
         dispatcher.connect(self.on_left, signal=SGL_LEFT)
         dispatcher.connect(self.on_right, signal=SGL_RIGHT)
         dispatcher.connect(self.on_right, signal=SGL_CLICK)
@@ -34,14 +34,14 @@ class Menu(Box.Box):
         
     def move_highlight_to(self, x):
         while x > self._highlightpos:
-            self._bitmap.invert_row(self._highlightpos)
+            self._screen.invert_row(self, self._highlightpos)
             self._highlightpos += 1
-            self.bitmap.invert_row(self._highlightpos + Box.arial_16.char_height)
+            self._screen.invert_row(self, self._highlightpos + Box.arial_16.char_height)
             self.refresh()
         while x < self._highlightpos:
-            self._bitmap.invert_row(self._highlightpos + Box.arial_16.char_height)
+            self._screen.invert_row(self, self._highlightpos + Box.arial_16.char_height)
             self._highlightpos -= 1
-            self.bitmap.invert_row(self._highlightpos)
+            self._screen.invert_row(self, self._highlightpos)
             self.refresh()
         
     def on_left(self, **args):
