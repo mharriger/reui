@@ -37,3 +37,11 @@ class Screen:
                 self._bitmap.replace_rect(x, y, sender._bitmap)
         self._display.display()
 
+    def draw_pixel(self, box, x, y, on=True):
+        bx, by = self._boxMap[box]
+        self._bitmap.draw_pixel(bx + x, by + y, on)
+
+    def draw_text(self, box, x, y, string, font=box.font):
+        bx, by = self._boxMap[box]
+        self._bitmap.draw_text(bx + x, by + y, string, font)
+        
